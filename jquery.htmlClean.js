@@ -29,6 +29,14 @@ Use and distibution http://www.opensource.org/licenses/bsd-license.php
         });
     };
 
+    // tags which are inline
+    var tagInline = [
+        "a", "abbr", "acronym", "address", "b", "big", "br", "button",
+        "caption", "cite", "code", "del", "em", "font",
+        "hr", "i", "input", "img", "ins", "label", "legend", "map", "q",
+        "s", "samp", "select", "option", "param", "small", "span", "strike", "strong", "sub", "sup",
+        "tt", "u", "var"];
+
     // clean the passed html
     $.htmlClean = function (html, options) {
         options = $.extend({}, $.htmlClean.defaults, options);
@@ -41,6 +49,11 @@ Use and distibution http://www.opensource.org/licenses/bsd-license.php
         var root = new Element();
         var stack = [root];
         var container = root;
+
+        if (options.spanBlock) {
+            var index = tagInline.indexOf("span");
+            tagInline.splice(index, 1);
+        }
 
         if (options.bodyOnly) {
             // check for body tag
@@ -211,13 +224,14 @@ Use and distibution http://www.opensource.org/licenses/bsd-license.php
             [/vertical-align:\s*sub/i, "sub"]
         ],
         allowComments: false,
-        allowEmpty: []
+        allowEmpty: [],
+        spanBlock: false
     };
 
     function applyFormat(element, options, output, indent) {
         if (element.tag.format && output.length > 0) {
             output.push("\n");
-            for (var i = 0; i < indent; i++) output.push("\t");
+            for (var i = 0; i < indent; i++) output.push("  ");
         }
     }
 
@@ -515,13 +529,6 @@ Use and distibution http://www.opensource.org/licenses/bsd-license.php
     // checks a char is white space or not
     $.htmlClean.isWhitespace = function (c) { return $.inArray(c, whitespace) != -1; };
 
-    // tags which are inline
-    var tagInline = [
-        "a", "abbr", "acronym", "address", "b", "big", "br", "button",
-        "caption", "cite", "code", "del", "em", "font",
-        "hr", "i", "input", "img", "ins", "label", "legend", "map", "q",
-        "s", "samp", "select", "option", "param", "small", "span", "strike", "strong", "sub", "sup",
-        "tt", "u", "var"];
     var tagFormat = ["address", "button", "caption", "code", "input", "label", "legend", "select", "option", "param"];
     var tagDisallowNest = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "th", "td", "object"];
     var tagAllowEmpty = ["th", "td"];
